@@ -13,6 +13,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public class XposedHook implements IXposedHookLoadPackage {
 
+	boolean isMatch = false;	
+	
 	@Override
 	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
 		/*if(lpparam.packageName.equals("org.thisismyplace.magicpasswd")) {
@@ -43,11 +45,14 @@ public class XposedHook implements IXposedHookLoadPackage {
 				//XposedBridge.log(String.valueOf(hoursMatch));
 				//XposedBridge.log(String.valueOf(minsMatch));
 				
-				if(!(hoursMatch & minsMatch)) {//ensure the password attempt is wrong
-					input += "aaaaaaaasssssssddddddddd";
-				}
+				isMatch = hoursMatch & minsMatch;
 				
 				param.args[0] = input.substring(2, input.length() - 2);//Pass the middle to the original function
+			}
+			@Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+				if(!isMatch)
+					param.setResult(false);
 			}
 		});
 	}
