@@ -7,26 +7,22 @@ import java.util.Date;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public class XposedHook implements IXposedHookLoadPackage {
-
-	boolean isMatch = false;	
+	boolean isMatch = false;
+	XSharedPreferences prefs;
+	
+	public XposedHook() {
+		prefs = new XSharedPreferences(XposedHook.class.getPackage().getName());
+	}
 	
 	@Override
 	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
-		/*if(lpparam.packageName.equals("org.thisismyplace.magicpasswd")) {
-			XposedBridge.log("Enabled: " + isEnabled());
-			findAndHookMethod("org.thisismyplace.magicpasswd.XposedHook", lpparam.classLoader, "isEnabled", new XC_MethodHook() {
-				@Override
-	            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-					param.setResult(false);
-				}
-			});
-			XposedBridge.log("Enabled: " + isEnabled());
-		}*/
+		if(prefs.getBoolean("pref_enabled", false) == false)//:(
+			return;
 		
 		if (!lpparam.packageName.equals("com.android.systemui"))//Code to check password is with in this process,
 			return;
@@ -37,7 +33,7 @@ public class XposedHook implements IXposedHookLoadPackage {
 				String input = (String) param.args[0];//The inputtedPassword
 				String hours = input.substring(0, 2);
 				String mins = input.substring(input.length() - 2, input.length());
-
+				
 				Date now = new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
 				boolean hoursMatch = sdf.format(now).substring(0, 2).equals(hours);
@@ -55,9 +51,5 @@ public class XposedHook implements IXposedHookLoadPackage {
 					param.setResult(false);
 			}
 		});
-	}
-	
-	public static boolean isEnabled() {
-		return false;
 	}
 }

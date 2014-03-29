@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">magicPasswd</string>
-    <string name="activate_message">WARNING, this module is not enabled.</string>
     <string name="xposed_description">Xposed plugin to allow you to have a dynamic password.</string>
+    <string name="pref_enabled_title">Enabled</string>
+    <string name="pref_enabled_summ">Alter the password dependent on the time</string>
 
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="pref_enabled"
+        android:title="@string/pref_enabled_title"
+        android:summary="@string/pref_enabled_summ"
+        android:defaultValue="false" />
+    
+</PreferenceScreen>
