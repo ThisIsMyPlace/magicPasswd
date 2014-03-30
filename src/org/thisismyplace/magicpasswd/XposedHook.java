@@ -5,6 +5,7 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.os.Build;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -24,8 +25,13 @@ public class XposedHook implements IXposedHookLoadPackage {
 		if(prefs.getBoolean("pref_enabled", false) == false)//:(
 			return;
 		
-		if (!lpparam.packageName.equals("com.android.systemui"))//Code to check password is with in this process,
-			return;
+		if(Build.VERSION.SDK_INT == 19) {
+			if (!lpparam.packageName.equals("com.android.systemui"))//Code to check password is with in this process,
+				return;
+		} else {
+			if (!lpparam.packageName.equals("android"))
+				return;
+		}
 		
 		findAndHookMethod("com.android.internal.widget.LockPatternUtils", lpparam.classLoader, "checkPassword", String.class, new XC_MethodHook() {
 			@Override
