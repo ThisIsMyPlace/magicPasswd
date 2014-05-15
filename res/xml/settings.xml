@@ -5,5 +5,11 @@
         android:title="@string/pref_enabled_title"
         android:summary="@string/pref_enabled_summ"
         android:defaultValue="false" />
-    
+    <ListPreference 
+        android:key="pref_type"
+        android:title="@string/pref_type_title"
+        android:entries="@array/pref_type_entries"
+        android:entryValues="@array/pref_type_entries_values"
+        android:dialogTitle="@string/pref_type_title"
+        android:defaultValue="0" />
 </PreferenceScreen>

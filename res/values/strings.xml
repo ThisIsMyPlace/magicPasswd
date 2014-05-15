@@ -2,9 +2,10 @@
 <resources>
 
     <string name="app_name">magicPasswd</string>
-    <string name="xposed_description">Xposed plugin to allow you to have a dynamic password.</string>
+    <string name="xposed_description">Xposed module to change the lockscreen passwd/pin</string>
     <string name="pref_enabled_title">Enabled</string>
     <string name="pref_enabled_summ">Alter the password dependent on the time</string>
-    <string name="reboot_warning">You will need to reboot after changing this</string>
+    <string name="reboot_warning">You will need to reboot after changing any settings</string>
+    <string name="pref_type_title">Password style</string>
 
 </resources>

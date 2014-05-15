@@ -26,8 +26,6 @@ public class MainActivity extends PreferenceActivity implements OnSharedPreferen
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if(key.equals("pref_enabled")) {
-			Toast.makeText(this, R.string.reboot_warning, Toast.LENGTH_SHORT).show();
-		}
+		Toast.makeText(this, R.string.reboot_warning, Toast.LENGTH_SHORT).show();
 	}
 }

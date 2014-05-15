@@ -37,19 +37,53 @@ public class XposedHook implements IXposedHookLoadPackage {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				String input = (String) param.args[0];//The inputtedPassword
-				String hours = input.substring(0, 2);
-				String mins = input.substring(input.length() - 2, input.length());
+				
+				String hours = "";
+				String mins = "";
+				
+				//get the HHmm from the specific format,
+				//and remove from the parameter
+				switch(prefs.getString("pref_type", "0")) {
+				case "0": //HH{orignalPassword}mm
+					hours = input.substring(0, 2);
+					mins = input.substring(input.length() - 2, input.length());
+					param.args[0] = input.substring(2, input.length() - 2);
+					break;
+				case "1": //HHmm{orignalPassword}
+					hours = input.substring(0, 2);
+					mins = input.substring(2, 4);
+					param.args[0] = input.substring(4, input.length());
+					break;
+				case "2": //{orignalPassword}HHmm
+					hours = input.substring(input.length() - 4, input.length() - 2);
+					mins = input.substring(input.length() - 2, input.length());
+					param.args[0] = input.substring(0, input.length() - 4);
+					break;
+				case "3": //HHmm
+					hours = input.substring(0, 2);
+					mins = input.substring(2, 4);
+					break;
+				}
 				
 				Date now = new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
 				boolean hoursMatch = sdf.format(now).substring(0, 2).equals(hours);
 				boolean minsMatch = sdf.format(now).substring(2, 4).equals(mins);
-				//XposedBridge.log(String.valueOf(hoursMatch));
-				//XposedBridge.log(String.valueOf(minsMatch));
 				
 				isMatch = hoursMatch & minsMatch;
 				
-				param.args[0] = input.substring(2, input.length() - 2);//Pass the middle to the original function
+				if(prefs.getString("pref_type", "0").equals("3")) {
+					 if(input.length() != 4)
+						 isMatch = false;
+					 param.setResult(isMatch);//type 3 dosn't include password, so
+					 //don't pass to auth function
+				}
+				
+				/*XposedBridge.log("Input: " + input);
+				XposedBridge.log("Type: " + prefs.getString("pref_type", "0"));
+				XposedBridge.log("hoursMatch: " + hoursMatch);
+				XposedBridge.log("minsMatch: " + minsMatch);
+				XposedBridge.log("isMatch: " + isMatch);*/
 			}
 			@Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
